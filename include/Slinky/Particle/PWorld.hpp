@@ -42,7 +42,7 @@ namespace Slinky
         PWorld(const Math::Vector3& _gravity);
         ~PWorld() = default;
 
-        const Particle* CreateParticle(const Particle& _particle);
+        Particle* CreateParticle(const Particle& _particle);
         void DestroyParticle(const Particle* _particle);
 
         void Step(float _dt) const;

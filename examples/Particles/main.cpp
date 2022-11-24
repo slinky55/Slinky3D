@@ -26,8 +26,10 @@
 #include <iostream>
 #include <cstdint>
 #include <array>
+#include <random>
 
 #include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
@@ -35,13 +37,13 @@
 
 #include "../common/Shader.hpp"
 #include "../common/Camera.hpp"
+#include "../common/CubeMesh.hpp"
 
 // Not currently using textures
 //#define STB_IMAGE_IMPLEMENTATION
 //#include "../common/stb_image.h"
 
-#include <Slinky/Particle/PWorld.hpp>
-#include <Slinky/Particle/Particle.hpp>
+#include <Slinky/Particle/PWorld.hpp> // Slinky
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -49,66 +51,26 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+constexpr uint32_t W_WIDTH { 800 };
+constexpr uint32_t W_HEIGHT { 600 };
 
 // camera
-Camera camera { glm::vec3(0.0f, 0.0f, 3.0f) };
-float lastX { SCR_WIDTH / 2.0f };
-float lastY { SCR_HEIGHT / 2.0f };
+Camera camera { glm::vec3(0.0f, 5.f, 50.f) };
+float lastX {W_WIDTH / 2.0f };
+float lastY {W_HEIGHT / 2.0f };
 bool firstMouse { true };
 
 // timing
 float deltaTime { 0.0f };	// time between current frame and last frame
 float lastFrame { 0.0f };
 
-// vertices
-constexpr std::array<float, 180> cubeVertices {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-};
-
 int main()
 {
+    // random number generator
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_real_distribution<float> dist(-5.f, 5.f);
+
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
@@ -122,7 +84,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Examples - Particles", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "Examples - Particles", nullptr, nullptr);
     if (window == nullptr)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -153,38 +115,14 @@ int main()
     // ------------------------------------
     Shader ourShader("../examples/Particles/cube.vert", "../examples/Particles/cube.frag");
 
-    uint32_t VBO;
-    uint32_t VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices.data(), GL_STATIC_DRAW);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    CubeMesh mesh;
 
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
     ourShader.use();
 
-    glm::vec3 cubePos;
-
     // Physics stuff
     Slinky::PWorld world { {0.f, -3.f, 0.f} };
-
-    world.CreateParticle({
-         {0.f, 0.f, 0.f},
-         25.f,
-         0.3f,
-         0.9f
-    });
 
     // render loop
     // -----------
@@ -195,6 +133,17 @@ int main()
         auto currentFrame { static_cast<float>(glfwGetTime()) };
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        for (std::size_t i { 0 }; i < 10; ++i)
+        {
+            auto particle { world.CreateParticle({
+                 {0.f, 0.f, 0.f},
+                 25.f,
+                 0.3f,
+                 0.9f
+            })};
+            particle->velocity = { dist(rd), dist(rd), dist(rd) };
+        }
 
         world.Step(deltaTime);
 
@@ -213,7 +162,7 @@ int main()
         // projection matrix
         glm::mat4 projection {glm::perspective(
             glm::radians(camera.Zoom),
-            (float)SCR_WIDTH / (float)SCR_HEIGHT,
+            (float)W_WIDTH / (float)W_HEIGHT,
             0.1f, 100.0f
         )};
         ourShader.setMat4("projection", projection);
@@ -236,7 +185,7 @@ int main()
             ourShader.setMat4("model", model);
 
             // render cube
-            glBindVertexArray(VAO);
+            glBindVertexArray(mesh.VAO);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
@@ -245,11 +194,6 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
-    // optional: de-allocate all resources once they've outlived their purpose:
-    // ------------------------------------------------------------------------
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
@@ -289,8 +233,8 @@ void framebuffer_size_callback(GLFWwindow*, int width, int height)
 // -------------------------------------------------------
 void mouse_callback(GLFWwindow*, double xposIn, double yposIn)
 {
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
+    float xpos { static_cast<float>(xposIn) };
+    float ypos { static_cast<float>(yposIn) };
 
     if (firstMouse)
     {
@@ -299,8 +243,8 @@ void mouse_callback(GLFWwindow*, double xposIn, double yposIn)
         firstMouse = false;
     }
 
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    float xoffset { xpos - lastX };
+    float yoffset { lastY - ypos }; // reversed since y-coordinates go from bottom to top
 
     lastX = xpos;
     lastY = ypos;

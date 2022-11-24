@@ -31,7 +31,7 @@ namespace Slinky
     {
     }
 
-    const Particle* PWorld::CreateParticle(const Particle& _particle)
+    Particle* PWorld::CreateParticle(const Particle& _particle)
     {
         m_particles.push_back(std::make_shared<Particle>(_particle));
         return m_particles.back().get();

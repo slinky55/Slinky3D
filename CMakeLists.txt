@@ -26,15 +26,14 @@ find_package(Magnum REQUIRED
 set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
 
 # examples
-add_executable(Cube examples/cube/main.cpp)
-target_link_libraries(Cube
+add_executable(Particles examples/Particles/main.cpp)
+target_link_libraries(Particles
         PRIVATE
-        Corrade::Main
+        ${PROJECT_NAME}
         Magnum::Application
         Magnum::GL
         Magnum::Magnum
         Magnum::MeshTools
         Magnum::Primitives
         Magnum::Shaders
-        Magnum::Trade
-        ${PROJECT_NAME})
+        Magnum::Trade)

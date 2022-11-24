@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cmath>
 
 namespace Slinky::Math
@@ -21,7 +23,7 @@ namespace Slinky::Math
                 y{_y},
                 z{_z} {}
 
-        constexpr Vector3(float _scalar) noexcept
+        explicit constexpr Vector3(float _scalar) noexcept
                 :
                 x{_scalar},
                 y{_scalar},

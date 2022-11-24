@@ -1,0 +1,99 @@
+
+Hc:S1135·"4Complete the task associated to this "TODO" comment.(êŠ×à
+Mc:S859ß":cast from 'const char *' to 'char *' drops const qualifier(ÿõŒ
+Mc:S859à":cast from 'const char *' to 'char *' drops const qualifier(äæÅ‘
+Rc:S859ä":cast from 'const char *' to 'char *' drops const qualifier(£¿Üºûÿÿÿÿ
+Hc:S1135ÿ
+"4Complete the task associated to this "TODO" comment.(˜¬ÕÅ
+vc:S5276À"]implicit conversion from 'uint64_t' (aka 'unsigned long long') to 'double' may lose precision(Ğ½’ìÿÿÿÿÿ
+vc:S5276Î"]implicit conversion from 'uint64_t' (aka 'unsigned long long') to 'double' may lose precision(îÆŸ»şÿÿÿÿ
+Ic:S1066<"1Merge this "if" statement with the enclosing one.( ²İşÿÿÿÿ
+Ac:S5955L")Declare the variable "i" inside the loop.(±›ÿÀùÿÿÿÿ
+gc:S3776"TRefactor this function to reduce its Cognitive Complexity from 52 to the 25 allowed.(ŠõíÆ
+`c:S134É"MRefactor this code to not nest more than 3 if|for|do|while|switch statements.(©õè
+ec:S134Ô"MRefactor this code to not nest more than 3 if|for|do|while|switch statements.(ˆŒ•ûÿÿÿÿ
+`c:S134İ"MRefactor this code to not nest more than 3 if|for|do|while|switch statements.( ‰ ê
+`c:S134æ"MRefactor this code to not nest more than 3 if|for|do|while|switch statements.(ÏÒ¦¸
+ec:S134ö"MRefactor this code to not nest more than 3 if|for|do|while|switch statements.(Âæ»’üÿÿÿÿ
+Ic:S1659‚"0Define each identifier in a dedicated statement.(óçî´şÿÿÿÿ
+Yc:S924»"FReduce the number of nested "break" statements from 2 to 1 authorized.(‡©ÙÎ
+Dc:S1066È"1Merge this "if" statement with the enclosing one.(ø¤x
+=c:S5955í")Declare the variable "i" inside the loop.(¯ÅÉ¯
+Dc:S1659¦"0Define each identifier in a dedicated statement.(’¼ÊÒ
+ƒc:S5350³"jMake the type of this variable a pointer-to-const. The current type of "window" is "struct _GLFWwindow *".(¹òê¥øÿÿÿÿ
+c:S1116¶"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(«æÂ¹
+Bc:S3562¸".Add a "default" case to this switch statement.(Æ“§è
+mc:S3776Ê"TRefactor this function to reduce its Cognitive Complexity from 40 to the 25 allowed.(ôËÃ‚ùÿÿÿÿ
+=c:S5955÷")Declare the variable "i" inside the loop.(ÄÈà“
+=c:S5955")Declare the variable "i" inside the loop.(ùÑë£
+ec:S134ù"MRefactor this code to not nest more than 3 if|for|do|while|switch statements.(Áòíçúÿÿÿÿ
+ec:S134"MRefactor this code to not nest more than 3 if|for|do|while|switch statements.(×çÅ²øÿÿÿÿ
+„c:S1116Ï"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Ì¢Ç‘üÿÿÿÿ
+Bc:S3562Ñ".Add a "default" case to this switch statement.(Æ“§è
+c:S1116¶"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Ûñ¹‹
+c:S1116¼"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+„c:S1116Ï"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(—Èğ‚øÿÿÿÿ
+c:S1116ß"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(š›ƒ™
+c:S1116ö"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(š›ƒ™
+„c:S1116’"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Ì¢Ç‘üÿÿÿÿ
+„c:S1116¤"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Ì¢Ç‘üÿÿÿÿ
+Mc:S1764§"9Identical sub-expressions on both sides of operator "!=".(òñ×ï
+Lc:S1764¦"9Identical sub-expressions on both sides of operator "!=".(¿úê{
+c:S1116Æ"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+c:S1116ß"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+Bc:S5955Š".Declare the variable "window" inside the loop.(Ú¥şª
+„c:S1116"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Ì¢Ç‘üÿÿÿÿ
+Qc:S1199‡"8Extract this nested code block into a separate function.(ÒÌâ–øÿÿÿÿ
+Qc:S1199”"8Extract this nested code block into a separate function.(ÒÌâ–øÿÿÿÿ
+„c:S1116¦"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Ì¢Ç‘üÿÿÿÿ
+c:S1116²"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+„c:S1116³"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(íÙªÀÿÿÿÿÿ
+c:S1116¼"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+„c:S1116½"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.( ÚÑøıÿÿÿÿ
+c:S1116Æ"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+„c:S1116Ç"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(€ÛŸÿÿÿÿÿ
+c:S1116Ñ"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+„c:S1116Ò"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(ìî°ˆùÿÿÿÿ
+c:S1116Ü"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+„c:S1116İ"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(İÔ—¾şÿÿÿÿ
+c:S1116ç"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+„c:S1116è"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(õÎñœøÿÿÿÿ
+c:S1116ò"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+c:S1116ó"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(˜…‹ª
+c:S1116ü"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+~c:S1116ı"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(¾§—
+c:S1116ˆ"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Ûñ¹‹
+c:S1116¤"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+c:S1116Ä"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+c:S1116è"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+c:S1116…	"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+c:S1116¡	"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+„c:S1116½	"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Ì¢Ç‘üÿÿÿÿ
+c:S1116Í	"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+c:S1116Ø	"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+„c:S1116İ	"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(öçûêşÿÿÿÿ
+Dc:S5955“
+"+Declare the variable "jid" inside the loop.(ûÈ°øıÿÿÿÿ
+`c:S134ú	"MRefactor this code to not nest more than 3 if|for|do|while|switch statements.(§µ“Ş
+c:S1116è	"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Ûñ¹‹
+c:S1116¤
+"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Ûñ¹‹
+c:S1116À
+"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+gc:S3776Ø
+"TRefactor this function to reduce its Cognitive Complexity from 37 to the 25 allowed.(èË¯
+ec:S134‚"MRefactor this code to not nest more than 3 if|for|do|while|switch statements.(Õ´¶¥úÿÿÿÿ
+ec:S134‡"MRefactor this code to not nest more than 3 if|for|do|while|switch statements.(ùÉüôøÿÿÿÿ
+c:S1116ã
+"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Ûñ¹‹
+9c:S1172®"%Remove the unused parameter "handle".(«ëñí
+}c:S995®"jMake the type of this parameter a pointer-to-const. The current type of "handle" is "struct GLFWwindow *".(«ëñí
+„c:S1116²"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Ì¢Ç‘üÿÿÿÿ
+9c:S1172¶"%Remove the unused parameter "handle".(†åí
+}c:S995¶"jMake the type of this parameter a pointer-to-const. The current type of "handle" is "struct GLFWwindow *".(†åí
+c:S1116¸"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Š››Ö
+c:S1116¾"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(„µü§
+„c:S1116Å"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(Ì¢Ç‘üÿÿÿÿ
+Mc:S1764Ç"9Identical sub-expressions on both sides of operator "!=".(Î£«­
+c:S1116Ó"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(«æÂ¹
+†c:S1116Ù"kModify the macro definition so that it needs to be followed by a semicolon, or remove this empty statement.(«æÂ¹8ÊŞ¨ÖÊ0

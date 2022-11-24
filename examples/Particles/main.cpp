@@ -1,159 +1,267 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
+#include <cstdint>
+#include <array>
 
-#include <Magnum/GL/DefaultFramebuffer.h>
-#include <Magnum/GL/Mesh.h>
-#include <Magnum/GL/Renderer.h>
-#include <Magnum/Math/Color.h>
-#include <Magnum/Math/Matrix4.h>
-#include <Magnum/MeshTools/Compile.h>
-#include <Magnum/Platform/Sdl2Application.h>
-#include <Magnum/Primitives/Icosphere.h>
-#include <Magnum/Primitives/Axis.h>
-#include <Magnum/Shaders/PhongGL.h>
-#include <Magnum/Trade/MeshData.h>
-#include <Magnum/Timeline.h>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
-#include <Slinky/Particle/Particle.hpp>
-#include <Slinky/Math/Vector3.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
-using namespace Magnum;
+#include "../common/Shader.hpp"
+#include "../common/Camera.hpp"
 
-struct Projectile
-{
-    Matrix4 transform;
-    Slinky::Particle particle;
+#define STB_IMAGE_IMPLEMENTATION
+#include "../common/stb_image.h"
 
-    float lifetime {0};
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void processInput(GLFWwindow *window);
+
+// settings
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+
+// camera
+Camera camera { glm::vec3(0.0f, 0.0f, 3.0f) };
+float lastX { SCR_WIDTH / 2.0f };
+float lastY { SCR_HEIGHT / 2.0f };
+bool firstMouse { true };
+
+// timing
+float deltaTime { 0.0f };	// time between current frame and last frame
+float lastFrame { 0.0f };
+
+// vertices
+constexpr std::array<float, 180> cubeVertices {
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
 
-class ParticlesExample : public Magnum::Platform::Application
+int main()
 {
-public:
-    explicit ParticlesExample(const Arguments& arguments);
-    virtual ~ParticlesExample() = default;
+    // glfw: initialize and configure
+    // ------------------------------
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    int Run();
-private:
-    void drawEvent() override;
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
-    void keyPressEvent(KeyEvent& event) override;
-
-    GL::Mesh sphereMesh { MeshTools::compile(Primitives::icosphereSolid(3)) };
-    GL::Mesh axisMesh { MeshTools::compile(Primitives::axis3D()) };
-
-    Shaders::PhongGL sphereShader;
-
-    Shaders::PhongGL axisShader;
-    Matrix4 axisTransform;
-
-    Matrix4 view;
-    Matrix4 projection;
-
-    std::vector<Projectile*> projectiles;
-
-    Timeline timeline;
-};
-
-ParticlesExample::ParticlesExample(const Arguments& arguments)
-    : Magnum::Platform::Application{arguments, Configuration{}.setTitle("Particles Example")}
-{
-    using namespace Math::Literals;
-
-    GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
-    GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
-
-    sphereShader.setLightPositions  ({{1.4f, 1.0f, 0.75f, 0.0f}})
-            .setDiffuseColor(Color3::cyan())
-            .setAmbientColor(Color3::fromHsv({Color3::cyan().hue(), 1.0f, 0.3f}));
-
-    projection =
-            Matrix4::rotationY(15.0_degf) *
-            Matrix4::perspectiveProjection(
-                    70.0_degf, Vector2{windowSize()}.aspectRatio(), 0.01f, 100.0f) *
-                    Matrix4::translation(Vector3::zAxis(-5.0f));
-
-    timeline.start();
-}
-
-void ParticlesExample::drawEvent()
-{
-    GL::defaultFramebuffer.clear(
-            GL::FramebufferClear::Color|GL::FramebufferClear::Depth);
-
-    for (auto& proj : projectiles)
+    // glfw window creation
+    // --------------------
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Examples - Particles", nullptr, nullptr);
+    if (window == nullptr)
     {
-        proj->transform = Matrix4::translation({
-            proj->particle.position.x,
-            proj->particle.position.y,
-            proj->particle.position.z
-        }) * Matrix4::scaling({0.1f, 0.1f, 0.1f});
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
 
-        sphereShader.setTransformationMatrix(proj->transform)
-                .setNormalMatrix(proj->transform.normalMatrix())
-                .setProjectionMatrix(projection)
-                .draw(sphereMesh);
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    // glad: load all OpenGL function pointers
+    // ---------------------------------------
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
     }
 
-    axisShader.setLightPositions  ({{1.4f, 1.0f, 0.75f, 0.0f}})
-        .setTransformationMatrix(axisTransform)
-        .setNormalMatrix(axisTransform.normalMatrix())
-        .setProjectionMatrix(projection)
-        .draw(axisMesh);
+    // configure global opengl state
+    // -----------------------------
+    glEnable(GL_DEPTH_TEST);
 
-    swapBuffers();
-}
+    // build and compile our shader program
+    // ------------------------------------
+    Shader ourShader("../examples/Particles/cube.vert", "../examples/Particles/cube.frag");
 
-void ParticlesExample::keyPressEvent(KeyEvent &event)
-{
-    if (event.key() == KeyEvent::Key::Space)
+    uint32_t VBO;
+    uint32_t VAO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices.data(), GL_STATIC_DRAW);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // texture coord attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
+    // -------------------------------------------------------------------------------------------
+    ourShader.use();
+
+    // render loop
+    // -----------
+    while (!glfwWindowShouldClose(window))
     {
-        auto& projectile { projectiles.emplace_back( new Projectile{
-            Matrix4::translation({0.f, 0.f, 0.f}),
-            Slinky::Particle({0.f, 0.f, 0.f}, 2.f, 0.f, 0.99f)
-        })};
+        // per-frame time logic
+        // --------------------
+        float currentFrame = static_cast<float>(glfwGetTime());
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
 
-        projectile->transform = Matrix4::scaling({0.1f, 0.1f, 0.1f}) * projectile->transform;
+        // input
+        // -----
+        processInput(window);
 
-        projectile->particle.velocity = {35.f, 1.f, 0.f};
-        projectile->particle.acceleration = {0.f, -1.f, 0.f};
+        // render
+        // ------
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // activate shader
+        ourShader.use();
+
+        // projection matrix
+        glm::mat4 projection {glm::perspective(
+            glm::radians(camera.Zoom),
+            (float)SCR_WIDTH / (float)SCR_HEIGHT,
+            0.1f, 100.0f
+        )};
+        ourShader.setMat4("projection", projection);
+
+        // camera/view transformation
+        glm::mat4 view { camera.GetViewMatrix() };
+        ourShader.setMat4("view", view);
+
+        // Model matrix
+        glm::mat4 model {
+            glm::translate(glm::mat4(1.0f),
+                           glm::vec3(0.f, 0.f, 0.f))
+        };
+        ourShader.setMat4("model", model);
+
+        // render cube
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // -------------------------------------------------------------------------------
+        glfwSwapBuffers(window);
+        glfwPollEvents();
     }
-}
 
-int ParticlesExample::Run()
-{
-    float dt {0.f};
-    float lastTime {0.f};
-    float currentTime {0.f};
+    // optional: de-allocate all resources once they've outlived their purpose:
+    // ------------------------------------------------------------------------
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
 
-    while (mainLoopIteration())
-    {
-        currentTime = timeline.currentFrameTime();
-        dt = currentTime - lastTime;
-        lastTime = currentTime;
-
-        for (auto& proj : projectiles)
-        {
-            proj->lifetime += dt;
-
-            if (proj->lifetime >= 2.f)
-            {
-                projectiles.erase(std::remove(projectiles.begin(), projectiles.end(), proj), projectiles.end());
-                continue;
-            }
-
-            proj->particle.Integrate(dt);
-        }
-
-        redraw();
-    }
-
+    // glfw: terminate, clearing all previously allocated GLFW resources.
+    // ------------------------------------------------------------------
+    glfwTerminate();
     return 0;
 }
 
-int main(int argc, char** argv)
+// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+// ---------------------------------------------------------------------------------------------------------
+void processInput(GLFWwindow *window)
 {
-    ParticlesExample app({argc, argv});
-    return app.Run();
+    using enum CameraDir;
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(RIGHT, deltaTime);
 }
+
+// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// ---------------------------------------------------------------------------------------------
+void framebuffer_size_callback(GLFWwindow*, int width, int height)
+{
+    // make sure the viewport matches the new window dimensions; note that width and
+    // height will be significantly larger than specified on retina displays.
+    glViewport(0, 0, width, height);
+}
+
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow*, double xposIn, double yposIn)
+{
+    float xpos = static_cast<float>(xposIn);
+    float ypos = static_cast<float>(yposIn);
+
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow*, double, double yoffset)
+{
+    camera.ProcessMouseScroll(static_cast<float>(yoffset));
+}
+

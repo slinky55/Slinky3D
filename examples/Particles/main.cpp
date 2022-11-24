@@ -22,7 +22,6 @@
     SOFTWARE.
 */
 
-
 #include <iostream>
 #include <cstdint>
 #include <array>
@@ -124,6 +123,13 @@ int main()
     // Physics stuff
     Slinky::PWorld world { {0.f, -3.f, 0.f} };
 
+    auto const* currentParticle { world.CreateParticle({
+        {0.f, 0.f, 0.f},
+        25.f,
+        0.3f,
+        0.9f
+    })};
+
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -133,6 +139,13 @@ int main()
         auto currentFrame { static_cast<float>(glfwGetTime()) };
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        // Destroy particles over 10 seconds old
+        if (glfwGetTime() >= 10.f)
+        {
+            world.DestroyParticle(currentParticle);
+            currentParticle = world.Particles().front().get();
+        }
 
         for (std::size_t i { 0 }; i < 10; ++i)
         {
@@ -180,7 +193,7 @@ int main()
                 particle->position.y,
                 particle->position.z
             });
-            model = glm::scale(model, glm::vec3{0.5f});
+            model = glm::scale(model, glm::vec3{0.1f});
 
             ourShader.setMat4("model", model);
 

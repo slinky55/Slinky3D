@@ -22,40 +22,39 @@
     SOFTWARE.
 */
 
-#pragma once
-
-#include "Slinky/Math/Vector3.hpp"
+#include "Slinky/Particle/PWorld.hpp"
 
 namespace Slinky
 {
-    struct Particle
+    PWorld::PWorld(const Math::Vector3& _gravity)
+        : m_gravity(_gravity)
     {
-        // Transform
-        Math::Vector3 position;
-        Math::Vector3 velocity;
-        Math::Vector3 acceleration;
+    }
 
-        // Force accumulator
-        Math::Vector3 forces;
+    const Particle* PWorld::CreateParticle(const Particle& _particle)
+    {
+        m_particles.push_back(std::make_shared<Particle>(_particle));
+        return m_particles.back().get();
+    }
 
-        // Mass in kg
-        float mass {0};
-        float invMass {0};
+    void PWorld::DestroyParticle(const Particle* _particle)
+    {
+        for (auto it = m_particles.begin(); it != m_particles.end(); ++it)
+        {
+            if (it->get() == _particle)
+            {
+                m_particles.erase(it);
+                break;
+            }
+        }
+    }
 
-        // Coefficient of restitution
-        float restitution {0};
-
-        // Damping coefficient
-        float damping {0};
-
-        Particle(const Math::Vector3& _pos,
-                 float _mass,
-                 float _restitution,
-                 float _damping);
-
-        void Integrate(float _dt);
-
-        void ApplyForce(const Math::Vector3& _force);
-        void ClearForces();
-    };
+    void PWorld::Step(float _dt) const
+    {
+        for (auto const& particle : m_particles)
+        {
+            particle->ApplyForce(m_gravity * particle->mass);
+            particle->Integrate(_dt);
+        }
+    }
 }

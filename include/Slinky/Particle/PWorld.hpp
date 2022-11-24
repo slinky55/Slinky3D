@@ -22,40 +22,41 @@
     SOFTWARE.
 */
 
+
 #pragma once
+
+#include <cmath>
+#include <vector>
+#include <memory>
+#include <initializer_list>
+
+#include "Slinky/Particle/Particle.hpp"
 
 #include "Slinky/Math/Vector3.hpp"
 
 namespace Slinky
 {
-    struct Particle
+    class PWorld
     {
-        // Transform
-        Math::Vector3 position;
-        Math::Vector3 velocity;
-        Math::Vector3 acceleration;
+    public:
+        PWorld(const Math::Vector3& _gravity);
+        ~PWorld() = default;
 
-        // Force accumulator
-        Math::Vector3 forces;
+        const Particle* CreateParticle(const Particle& _particle);
+        void DestroyParticle(const Particle* _particle);
 
-        // Mass in kg
-        float mass {0};
-        float invMass {0};
+        void Step(float _dt) const;
 
-        // Coefficient of restitution
-        float restitution {0};
+        /*
+         * Accessors / Mutators
+         */
+        const Math::Vector3& Gravity() const;
+        void SetGravity(const Math::Vector3& _gravity);
 
-        // Damping coefficient
-        float damping {0};
+        const std::vector<std::shared_ptr<Particle>>& Particles() const;
+    private:
+        std::vector<std::shared_ptr<Particle>> m_particles;
 
-        Particle(const Math::Vector3& _pos,
-                 float _mass,
-                 float _restitution,
-                 float _damping);
-
-        void Integrate(float _dt);
-
-        void ApplyForce(const Math::Vector3& _force);
-        void ClearForces();
+        Math::Vector3 m_gravity;
     };
 }

@@ -36,9 +36,11 @@
 #include "../common/Shader.hpp"
 #include "../common/Camera.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "../common/stb_image.h"
+// Not currently using textures
+//#define STB_IMAGE_IMPLEMENTATION
+//#include "../common/stb_image.h"
 
+#include <Slinky/Particle/PWorld.hpp>
 #include <Slinky/Particle/Particle.hpp>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -172,11 +174,17 @@ int main()
     // -------------------------------------------------------------------------------------------
     ourShader.use();
 
-    // Position of cube
-    glm::vec3 cubePos {0.f, 0.f, 0.f};
+    glm::vec3 cubePos;
 
     // Physics stuff
+    Slinky::PWorld world { {0.f, -3.f, 0.f} };
 
+    world.CreateParticle({
+         {0.f, 0.f, 0.f},
+         25.f,
+         0.3f,
+         0.9f
+    });
 
     // render loop
     // -----------
@@ -188,7 +196,7 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        cubePos += ( glm::vec3{1.f, 0.f, 0.f} * deltaTime );
+        world.Step(deltaTime);
 
         // input
         // -----
@@ -214,16 +222,23 @@ int main()
         glm::mat4 view { camera.GetViewMatrix() };
         ourShader.setMat4("view", view);
 
-        // Model matrix
-        glm::mat4 model { glm::mat4{1.0f} };
-        model = glm::translate(model, cubePos);
-        model = glm::scale(model, glm::vec3{0.5f});
+        for (auto const& particle : world.Particles())
+        {
+            // Model matrix
+            glm::mat4 model { glm::mat4{1.0f} };
+            model = glm::translate(model, {
+                particle->position.x,
+                particle->position.y,
+                particle->position.z
+            });
+            model = glm::scale(model, glm::vec3{0.5f});
 
-        ourShader.setMat4("model", model);
+            ourShader.setMat4("model", model);
 
-        // render cube
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+            // render cube
+            glBindVertexArray(VAO);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

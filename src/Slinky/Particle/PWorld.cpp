@@ -57,4 +57,6 @@ namespace Slinky
             particle->Integrate(_dt);
         }
     }
+
+    const std::vector<std::shared_ptr<Particle>>& PWorld::Particles() const { return m_particles; }
 }

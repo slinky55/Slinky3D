@@ -16,7 +16,7 @@ namespace Slinky
 
         void Integrate(float _dt);
 
-        void AddForce(const Math::Vector3& _force);
+        void ApplyForce(const Math::Vector3& _force);
         void ClearForces();
 
         [[nodiscard]] Math::Vector3& Position();

@@ -30,7 +30,7 @@ namespace Slinky
 
         ClearForces();
     }
-    void RigidBody::AddForce(const Math::Vector3& _force)
+    void RigidBody::ApplyForce(const Math::Vector3& _force)
     {
         m_forces += _force;
     }

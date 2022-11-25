@@ -13,3 +13,6 @@ add_subdirectory(3rdparty/glm)
 
 add_executable(Particles examples/Particles/main.cpp)
 target_link_libraries(Particles ${PROJECT_NAME} glfw glad glm)
+
+add_executable(FallingCubes examples/FallingCubes/main.cpp)
+target_link_libraries(FallingCubes ${PROJECT_NAME} glfw glad glm)

@@ -15,6 +15,8 @@ namespace Slinky
 
         void Step(float _dt);
 
+        RigidBody* CreateBody(const RigidBody& _body);
+
         const std::vector<std::shared_ptr<RigidBody>>& Bodies() const;
     private:
         std::vector<std::shared_ptr<RigidBody>> m_bodies;

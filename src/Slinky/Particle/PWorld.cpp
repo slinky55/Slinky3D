@@ -26,37 +26,70 @@
 
 namespace Slinky
 {
-    PWorld::PWorld(const Math::Vector3& _gravity)
-        : m_gravity(_gravity)
+    PWorld::PWorld(const Math::Vector3& _gravity,
+                   uint32_t _itrs)
+        :
+        m_gravity{_gravity},
+        m_iterations{_itrs}
     {
     }
 
-    Particle* PWorld::CreateParticle(const Particle& _particle)
+    void PWorld::Step(float _dt)
     {
-        m_particles.push_back(std::make_shared<Particle>(_particle));
-        return m_particles.back().get();
-    }
-
-    void PWorld::DestroyParticle(const Particle* _particle)
-    {
-        for (auto it = m_particles.begin(); it != m_particles.end(); ++it)
+        /*
+         * Clear particle forces
+         */
+        PReg* reg = particles;
+        while (reg)
         {
-            if (it->get() == _particle)
-            {
-                m_particles.erase(it);
-                break;
-            }
+            reg->particle->ClearForces();
+            reg = reg->next;
         }
-    }
 
-    void PWorld::Step(float _dt) const
-    {
-        for (auto const& particle : m_particles)
+        /*
+         * Apply gravity
+         */
+        reg = particles;
+        while (reg)
         {
-            particle->ApplyForce(m_gravity * particle->mass);
-            particle->Integrate(_dt);
+            reg->particle->ApplyForce(m_gravity * reg->particle->mass);
+            reg = reg->next;
         }
+
+        /*
+         * Integrate particles
+         */
+        reg = particles;
+        while (reg)
+        {
+            reg->particle->Integrate(_dt);
+            reg = reg->next;
+        }
+
+        uint32_t contactsUsed { GenerateContacts() };
+        if (m_iterations == 0) ResolveContacts(contacts, contactsUsed, contactsUsed * 2, _dt);
+        else ResolveContacts(contacts, contactsUsed, m_iterations, _dt);
     }
 
-    const std::vector<std::shared_ptr<Particle>>& PWorld::Particles() const { return m_particles; }
+    uint32_t PWorld::GenerateContacts()
+    {
+        uint32_t limit { MAX_CONTACTS };
+        PContact* next { contacts };
+
+        PContactGeneratorReg* reg { contactGenerators };
+        while (reg)
+        {
+            uint32_t used { reg->gen->AddContact(next, limit) };
+            limit -= used;
+
+            next += used;
+
+            if (limit <= 0) break;
+
+            reg = reg->next;
+        }
+
+        // Contacts used
+        return MAX_CONTACTS - limit;
+    }
 }

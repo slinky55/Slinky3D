@@ -28,9 +28,10 @@
 #include <cmath>
 #include <vector>
 #include <memory>
-#include <initializer_list>
+#include <cstdint>
 
 #include "Slinky/Particle/Particle.hpp"
+#include "Slinky/Particle/PContact.hpp"
 
 #include "Slinky/Math/Vector3.hpp"
 
@@ -39,24 +40,37 @@ namespace Slinky
     class PWorld
     {
     public:
-        PWorld(const Math::Vector3& _gravity);
+        PWorld(const Math::Vector3& _gravity,
+               uint32_t _itrs);
         ~PWorld() = default;
 
-        Particle* CreateParticle(const Particle& _particle);
-        void DestroyParticle(const Particle* _particle);
+        void Step(float _dt);
 
-        void Step(float _dt) const;
-
-        /*
-         * Accessors / Mutators
-         */
-        const Math::Vector3& Gravity() const;
-        void SetGravity(const Math::Vector3& _gravity);
-
-        const std::vector<std::shared_ptr<Particle>>& Particles() const;
     private:
-        std::vector<std::shared_ptr<Particle>> m_particles;
+        constexpr static std::size_t MAX_CONTACTS { 256 };
+
+        // Linked list structure for particles
+        struct PReg
+        {
+            Particle* particle;
+            PReg* next;
+        };
+        PReg* particles;
+
+        struct PContactGeneratorReg
+        {
+            PContactGenerator* gen;
+            PContactGeneratorReg* next;
+        };
+        PContactGeneratorReg* contactGenerators;
+
+        PContact* contacts;
 
         Math::Vector3 m_gravity;
+
+        // Number of iterations for the contact resolver
+        uint32_t m_iterations;
+
+        uint32_t GenerateContacts();
     };
 }

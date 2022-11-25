@@ -28,11 +28,13 @@
 namespace Slinky
 {
     Particle::Particle(const Math::Vector3 &_pos,
+                       float _radius,
                        float _mass,
                        float _restitution,
                        float _damping)
                        :
                        position{_pos},
+                       radius{_radius},
                        mass{_mass},
                        invMass{ (_mass > 0) ? 1 / _mass : 0 },
                        restitution{_restitution},

@@ -38,6 +38,9 @@ namespace Slinky
         // Force accumulator
         Math::Vector3 forces;
 
+        // Radius for collisions
+        float radius;
+
         // Mass in kg
         float mass {0};
         float invMass {0};
@@ -49,6 +52,7 @@ namespace Slinky
         float damping {0};
 
         Particle(const Math::Vector3& _pos,
+                 float _radius,
                  float _mass,
                  float _restitution,
                  float _damping);

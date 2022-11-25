@@ -11,7 +11,7 @@ namespace Slinky
                          m_position{_position},
                          m_size{_size},
                          m_mass{_mass},
-                         m_invMass{1.0f / _mass},
+                         m_invMass{_mass > 0 ? 1.0f / _mass : 0},
                          m_restitution{_restitution},
                          m_damping{_damping},
                          m_collider{ {_position}, {_size / 2.f}}

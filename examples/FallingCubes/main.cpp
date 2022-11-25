@@ -121,7 +121,7 @@ int main()
 
     // build and compile our shader program
     // ------------------------------------
-    Shader ourShader { "../examples/Particles/cube.vert",
+    Shader cubeShader {"../examples/Particles/cube.vert",
                        "../examples/Particles/cube.frag" };
 
     // Cube mesh for drawing cubes
@@ -129,12 +129,12 @@ int main()
 
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
-    ourShader.use();
+    cubeShader.use();
 
     // Physics stuff
-    Slinky::World world { {0.f, -3.f, 0.f} };
+    Slinky::World world { {0.f, -10.f, 0.f} };
 
-    auto ground { world.CreateBody({
+    auto* ground { world.CreateBody({
        {0.f, 0.f, 0.f},
        {10.f, 0.3f, 10.f},
        0,
@@ -142,12 +142,12 @@ int main()
        0.f
     })};
 
-    auto box { world.CreateBody({
-       {0.f, 5.f, 0.f},
+    auto* box { world.CreateBody({
+       {0.f, 10.f, 0.f},
        {1.f, 1.f, 1.f},
-       0,
+       70.f,
        0.3f,
-       0.f
+       0.9f
     })};
 
     // render loop
@@ -172,7 +172,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // activate shader
-        ourShader.use();
+        cubeShader.use();
 
         // projection matrix
         glm::mat4 projection {glm::perspective(
@@ -180,17 +180,16 @@ int main()
                 (float)W_WIDTH / (float)W_HEIGHT,
                 0.1f, 100.0f
         )};
-        ourShader.setMat4("projection",
-                          projection);
+        cubeShader.setMat4("projection",
+                           projection);
 
         // camera/view transformation
         glm::mat4 view { camera.GetViewMatrix() };
-        ourShader.setMat4("view", view);
+        cubeShader.setMat4("view", view);
 
         glBindVertexArray(mesh.VAO);
         // Model matrix
         glm::mat4 model { glm::mat4{1.0f} };
-        ourShader.setMat4("model", model);
 
         // Set up and draw ground
         model = glm::translate(model, {
@@ -203,6 +202,7 @@ int main()
                 ground->Size().y,
                 ground->Size().z
         });
+        cubeShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // Set up and draw box
@@ -217,6 +217,7 @@ int main()
                 box->Size().y,
                 box->Size().z
         });
+        cubeShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -257,7 +258,6 @@ void framebuffer_size_callback(GLFWwindow*, int width, int height)
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
-
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------

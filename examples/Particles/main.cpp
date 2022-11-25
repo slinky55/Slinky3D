@@ -136,6 +136,7 @@ int main()
     auto const* currentParticle { world.CreateParticle({
         {0.f, 0.f, 0.f},
         25.f,
+        0.1f,
         0.3f,
         0.9f
     })};
@@ -151,17 +152,18 @@ int main()
         lastFrame = currentFrame;
 
         // Destroy particles over 10 seconds old
-        if (glfwGetTime() >= 10.f)
+/*        if (glfwGetTime() >= 10.f)
         {
             world.DestroyParticle(currentParticle);
             currentParticle = world.Particles().front().get();
-        }
+        }*/
 
         for (std::size_t i { 0 }; i < 10; ++i)
         {
             auto particle { world.CreateParticle({
                  {0.f, 0.f, 0.f},
                  25.f,
+                 0.1f,
                  0.3f,
                  0.9f
             })};

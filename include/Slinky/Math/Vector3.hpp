@@ -120,4 +120,9 @@ namespace Slinky::Math
             return *this / Magnitude();
         }
     };
+
+    inline float Distance(const Vector3 &_lhs, const Vector3 &_rhs)
+    {
+        return (_lhs - _rhs).Magnitude();
+    }
 }

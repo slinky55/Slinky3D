@@ -1,0 +1,17 @@
+
+€	cpp:S3230."dDo not assign data members in a constructor. Initialize member "Position" in an initialization list.(–ÊÏ8ÚÇÄÙÊ0
+x	cpp:S3230/"cDo not assign data members in a constructor. Initialize member "WorldUp" in an initialization list.(ªí¹
+{	cpp:S32300"_Do not assign data members in a constructor. Initialize member "Yaw" in an initialization list.(ıÆ—½8ÚÇÄÙÊ0
+{	cpp:S32301"aDo not assign data members in a constructor. Initialize member "Pitch" in an initialization list.(î°¥Øûÿÿÿÿ
+…	cpp:S32307"dDo not assign data members in a constructor. Initialize member "Position" in an initialization list.(ª£Ñ·ıÿÿÿÿ8İÇÄÙÊ0
+„	cpp:S32308"cDo not assign data members in a constructor. Initialize member "WorldUp" in an initialization list.(æÛÀ²ùÿÿÿÿ8İÇÄÙÊ0
+{	cpp:S32309"_Do not assign data members in a constructor. Initialize member "Yaw" in an initialization list.(ıÆ—½8İÇÄÙÊ0
+{	cpp:S3230:"aDo not assign data members in a constructor. Initialize member "Pitch" in an initialization list.(î°¥Øûÿÿÿÿ
+bcpp:S1075"GThis function has 8 parameters, which is greater than the 7 authorized.(ô¢Èù8ŞÇÄÙÊ0
+J	cpp:S5817?")This function should be declared "const".(ª–Œşÿÿÿÿ8áÇÄÙÊ0
+T	cpp:S6177F"3Reduce verbosity with "using enum" for "CameraDir".(ÒÌâ–øÿÿÿÿ8ŒàÇÙÊ0
+6	cpp:S1905k"Remove this redundant cast.(ÜÑ»u8èÇÄÙÊ0
+“	cpp:S3230,"wDo not use the constructor's initializer list for data member "MouseSensitivity". Use the in-class initializer instead.(‰ç¿ª8íÇÄÙÊ0
+	cpp:S3230,"tDo not use the constructor's initializer list for data member "MovementSpeed". Use the in-class initializer instead.(‰ç¿ª8îÇÄÙÊ0
+ˆ	cpp:S3230,"lDo not use the constructor's initializer list for data member "Front". Use the in-class initializer instead.(‰ç¿ª8îÇÄÙÊ0
+‡	cpp:S3230,"kDo not use the constructor's initializer list for data member "Zoom". Use the in-class initializer instead.(‰ç¿ª8ïÇÄÙÊ0

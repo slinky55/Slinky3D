@@ -83,7 +83,11 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "Examples - Particles", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(W_WIDTH,
+                                          W_HEIGHT,
+                                          "Examples - Particles",
+                                          nullptr,
+                                          nullptr);
     if (window == nullptr)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -91,12 +95,17 @@ int main()
         return -1;
     }
     glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
+    glfwSetFramebufferSizeCallback(window,
+                                   framebuffer_size_callback);
+    glfwSetCursorPosCallback(window,
+                             mouse_callback);
+    glfwSetScrollCallback(window,
+                          scroll_callback);
 
     // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window,
+                     GLFW_CURSOR,
+                     GLFW_CURSOR_DISABLED);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -112,7 +121,8 @@ int main()
 
     // build and compile our shader program
     // ------------------------------------
-    Shader ourShader("../examples/Particles/cube.vert", "../examples/Particles/cube.frag");
+    Shader ourShader { "../examples/Particles/cube.vert",
+                       "../examples/Particles/cube.frag" };
 
     CubeMesh mesh;
 
@@ -178,7 +188,8 @@ int main()
             (float)W_WIDTH / (float)W_HEIGHT,
             0.1f, 100.0f
         )};
-        ourShader.setMat4("projection", projection);
+        ourShader.setMat4("projection",
+                          projection);
 
         // camera/view transformation
         glm::mat4 view { camera.GetViewMatrix() };

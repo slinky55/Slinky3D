@@ -1,0 +1,7 @@
+
+n	cpp:S1235"L'Slinky::PContactGenerator' has virtual functions but non-virtual destructor( ¾»ñüÿÿÿÿ8’ş…éÊ0
+n	cpp:S1235"L'Slinky::PContactGenerator' has virtual functions but non-virtual destructor( ¾»ñüÿÿÿÿ8äœÄéÊ0
+n	cpp:S1235"L'Slinky::PContactGenerator' has virtual functions but non-virtual destructor( ¾»ñüÿÿÿÿ8Œ·ÄéÊ0
+k	cpp:S60040"OUse the init-statement to declare "sepVelocityFromAcc" inside the if statement.(º­€ 8·ñÅæÊ0
+v	cpp:S1172N"URemove the unused parameter "_dt", make it unnamed, or declare it "[[maybe_unused]]".(—·¾¢ûÿÿÿÿ8ÄñÅæÊ0
+“cpp:S995j"sMake the type of this parameter a pointer-to-const. The current type of "_contacts" is "struct Slinky::PContact *".(‚ÙÆÇşÿÿÿÿ8¯é±éÊ0
